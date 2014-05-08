@@ -17,8 +17,9 @@ namespace AzureSiteReplicator
         private int _inUseCount;
         private DateTime _lastChangeTime;
         private DateTime _publishStartTime;
-        private IConfigRepository _repository;
-
+        private readonly IPublishXmlRepository _publishXmlRepository;
+        private readonly IConfigRepository _configRepository;
+ 
         public Replicator()
         {
             var fileSystemWatcher = new FileSystemWatcher(Environment.Instance.ContentPath);
@@ -29,8 +30,8 @@ namespace AzureSiteReplicator
             fileSystemWatcher.Error += OnError;
             fileSystemWatcher.IncludeSubdirectories = true;
             fileSystemWatcher.EnableRaisingEvents = true;
-
-            _repository = new ConfigRepository();
+            _publishXmlRepository = new PublishXmlRepository();
+            _configRepository = new ConfigRepository();
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)
@@ -156,7 +157,7 @@ namespace AzureSiteReplicator
         {
             get
             {
-                return _repository;
+                return _configRepository;
             }
         }
     }

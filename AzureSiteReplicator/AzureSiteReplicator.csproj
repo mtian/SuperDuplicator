@@ -126,7 +126,9 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Contracts\IPublishXmlRepository.cs" />
     <Compile Include="Contracts\IStatusFile.cs" />
+    <Compile Include="Data\PublishXmlRepository.cs" />
     <Compile Include="Data\ConfigFile.cs" />
     <Compile Include="Contracts\IConfigRepository.cs" />
     <Compile Include="Contracts\IEnvironment.cs" />

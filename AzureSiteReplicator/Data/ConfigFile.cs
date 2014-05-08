@@ -24,7 +24,7 @@ namespace AzureSiteReplicator.Data
     {
         private string _filePath;
         private volatile List<SkipRule> _skipRules = new List<SkipRule>();
-
+        
         public ConfigFile()
         {
             _filePath = Path.Combine(Environment.Instance.SiteReplicatorPath, "config.xml");
@@ -80,6 +80,36 @@ namespace AzureSiteReplicator.Data
                                 nav.MoveToParent();
                             }
                             
+                            newSkips.Add(rule);
+                            hasMoreSkips = nav.MoveToNext();
+                        }
+
+                        _skipRules = newSkips;
+                        nav.MoveToParent();
+                    }
+                }
+                else if (string.Equals(nav.Name, "skipSites", StringComparison.OrdinalIgnoreCase))
+                {
+                    bool hasMoreSkips = nav.MoveToFirstChild();
+                    if (hasMoreSkips)
+                    {
+                        while (hasMoreSkips)
+                        {
+                            SkipRule rule = new SkipRule();
+                            rule.Expression = nav.Value;
+
+                            if (nav.MoveToFirstAttribute())
+                            {
+                                if (string.Equals(nav.Name, "isDirectory", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    bool isDir = false;
+                                    bool.TryParse(nav.Value, out isDir);
+                                    rule.IsDirectory = isDir;
+                                }
+
+                                nav.MoveToParent();
+                            }
+
                             newSkips.Add(rule);
                             hasMoreSkips = nav.MoveToNext();
                         }
