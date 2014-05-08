@@ -29,6 +29,7 @@ namespace AzureSiteReplicator
             fileSystemWatcher.Error += OnError;
             fileSystemWatcher.IncludeSubdirectories = true;
             fileSystemWatcher.EnableRaisingEvents = true;
+
             _repository = new ConfigRepository();
         }
 
