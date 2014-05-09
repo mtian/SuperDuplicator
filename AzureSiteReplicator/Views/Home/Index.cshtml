@@ -25,29 +25,52 @@
             <div class="tab-pane active" id="sites">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h1>Site List</h1>
                         @using (Html.BeginForm("Apply"))
                         {
+                            <h3>Origin: antaresdemo</h3>
+                            <h3>Targets:</h3>
                             <ul id="siteList" class="list-group" style="margin-bottom:0px;">
-                                @{
-                            foreach (var site in Model.AllSites)
-                            {
-                                string status = "Not Duplicated"; //site.State == "NotStarted" ? "Deploying" : site.State
-                                <li class="list-group-item" data-sitename="@site.Name" data-sitestate="@status">
+                                <li class="list-group-item">
                                     <div class="row">
-                                        <div class="siteStatusText col-xs-9"><span class="siteStatusText">@site.Name</span></div>
+                                        <div class="col-xs-6"><span class="">Site Name</span></div>
+                                        <div class="col-xs-3"><span class="">Web Space</span></div>
                                         <div class="col-xs-1">
-                                            <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs">
-                                                <span class="badgePlain glyphicon glyphicon-list"></span>
-                                            </a>
+                                            <div class="pull-left">
+                                                <span class="">Log</span>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-1"><input type="checkbox" name="@site.Name" checked="@site.Checked"></div>
+                                        <div class="col-xs-2">
+                                            <div class="pull-left">
+                                                <span>Duplicated</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
-                            }
+                                @foreach (var site in Model.AllSites)
+                                {
+                                    string url = "http://" + @site.Name + ".azurewebsites.net";
+                                    <li class="list-group-item" data-sitename="@site.Name">
+                                        <div class="row">
+                                            <div class="col-xs-6"><a href=@url>@site.Name</a></div>
+                                            <div class="col-xs-3"><span class="pull-left">@site.WebSpace</span></div>
+                                            <div class="col-xs-1">
+                                                <div class="pull-left">
+                                                    <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs">
+                                                        <span class="badgePlain glyphicon glyphicon-list"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <div class="pull-left">
+                                                    <input type="checkbox" name="@site.Name" checked="@site.Checked">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
                                 }
                             </ul>
-                            <button type="submit" value="Apply">Submit</button>
+                            <h4></h4>
+                            <div class="pull-right"><button type="submit" value="Apply">Apply</button></div>
                         }
                     </div>
                 </div>
