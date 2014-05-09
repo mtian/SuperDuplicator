@@ -42,7 +42,7 @@ input[type="checkbox"].input-validation-error {
 }
 
 .tab-body {
-    background-color: #eeeeee; padding: 30px; border-radius: 6px;
+    padding: 30px; border-radius: 6px;
 }
 
 .vcenter {

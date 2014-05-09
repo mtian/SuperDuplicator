@@ -20,44 +20,35 @@
         <div class="col-sm-1"></div>
 
         <div class="col-sm-10 tab-body tab-content">
-            
+
             <!-- Sites Tab -->
             <div class="tab-pane active" id="sites">
                 <div class="row">
                     <div class="col-sm-12">
                         <h1>Site List</h1>
-                        <ul id="siteList" class="list-group" style="margin-bottom:0px;">
-                            @if (Model.SiteStatuses.Count == 0)
-                            {
-                                @:There doesn't appear to be any sites configured yet.  Upload a publish settings file to get started.
-                            }
-                            else
-                            {
-                                var sites = Model.SiteStatuses;
-                                foreach(var site in sites)
-                                {
-                                    string status = site.State == "NotStarted" ? "Deploying" : site.State;
-                                    <li class="list-group-item" data-siteName="@site.Name" data-siteState="@status">
-                                        <span class="siteStatusText">@site.Name - @status</span>
-                                        <a href="#" title="Remove Site" class="removeSiteBadge"><span class="badgePlain glyphicon glyphicon-remove"></span></a>
-                                        <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs"><span class="badgePlain glyphicon glyphicon-list"></span></a>
-                                        <a href="#" class="syncSiteBadge" title="Sync"><span class="badgePlain glyphicon glyphicon-repeat"></span></a>
-                                    </li>
+                        <form>
+                            <ul id="siteList" class="list-group" style="margin-bottom:0px;">
+                                @{
+                                    var sites = Model.AllSites;
+                                    foreach (var site in sites)
+                                    {
+                                        string status = "Not Duplicated"; //site.State == "NotStarted" ? "Deploying" : site.State
+                                        <li class="list-group-item" data-sitename="@site.Name" data-sitestate="@status">
+                                            <div class="row">
+                                                <div class="siteStatusText col-xs-9"><span class="siteStatusText">@site.Name</span></div>
+                                                <div class="col-xs-1">
+                                                    <a href="#" class="syncSiteBadge" title="Sync"><span class="badgePlain glyphicon glyphicon-repeat"></span></a>
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs"><span class="badgePlain glyphicon glyphicon-list"></span></a>
+                                                </div>
+                                                <div class="col-xs-1"><input type="checkbox" name="@site.Name" value="@site.Name"></div>
+                                            </div>
+                                        </li>
+                                    }
                                 }
-                            }
-                        </ul>
-                    </div>
-                </div>
-                <div class="row" style="margin-top:100px;">
-                    <div class="col-sm-12">
-                        <h4>Upload Publish Settings File</h4>
-                        <form action="" class="form-inline" role="form" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <input type="file" name="file" id="file"/>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" style="height:23px">Submit</button>
-                            </div>
+                            </ul>
+                            <button type="submit">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -68,7 +59,7 @@
                 <h1>Skip Rules</h1>
                 <div class="row">
                     <div class="col-sm-12">
-                        <input type="text" id="skipExpressionText" placeholder="Regular Expression for File to Skip" class="col-sm-6"/>
+                        <input type="text" id="skipExpressionText" placeholder="Regular Expression for File to Skip" class="col-sm-6" />
                         <button type="button" id="addSkipButton" disabled="disabled" class="btn btn-default btn-sm col-sm-1" style="margin-left:5px;">Add</button>
                         <button type="button" id="saveSkipButton" disabled="disabled" class="btn btn-default btn-sm col-sm-1" style="margin-left:5px;">Save</button>
                         <button type="button" id="testSkipButton" class="btn btn-default btn-sm btn-primary col-sm-1" style="margin-left:5px">Test</button>
@@ -85,14 +76,14 @@
                                 </tr>
                             </thead>
                             <tbody id="skipRulesTableBody">
-                            @foreach (var skip in Model.SkipFiles)
-                            {
-                                <tr class="skipRuleRow">
-                                    <td>@skip.Expression</td>
-                                    <td class="rowCentered"><input type="checkbox" checked="@skip.IsDirectory"/></td>
-                                    <td class="rowCentered"><button type="button" class="close" aria-hidden="true">&times;</button></td>
-                                </tr>
-                            }
+                                @foreach (var skip in Model.SkipFiles)
+                                {
+                                    <tr class="skipRuleRow">
+                                        <td>@skip.Expression</td>
+                                        <td class="rowCentered"><input type="checkbox" checked="@skip.IsDirectory" /></td>
+                                        <td class="rowCentered"><button type="button" class="close" aria-hidden="true">&times;</button></td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>

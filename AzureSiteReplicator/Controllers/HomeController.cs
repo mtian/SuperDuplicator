@@ -18,15 +18,16 @@ namespace AzureSiteReplicator.Controllers
         public ActionResult Index()
         {
             List<SiteStatusModel> statuses = new List<SiteStatusModel>();
-            foreach (var site in Replicator.Instance.Repository.Sites)
+            foreach (var site in Replicator.Instance.ConfigRepository.Sites)
             {
                 statuses.Add(new SiteStatusModel(site.Status));
             }
 
             ReplicationInfoModel model = new ReplicationInfoModel()
             {
+                AllSites = Replicator.Instance.PublishXmlRepository.Sites,
                 SiteStatuses = statuses,
-                SkipFiles = Replicator.Instance.Repository.Config.SkipRules
+                SkipFiles = Replicator.Instance.ConfigRepository.Config.SkipRules
             };
 
             return View(model);
@@ -36,7 +37,7 @@ namespace AzureSiteReplicator.Controllers
         public JsonResult SiteStatuses()
         {
             List<SiteStatusModel> statuses = new List<SiteStatusModel>();
-            foreach (var site in Replicator.Instance.Repository.Sites)
+            foreach (var site in Replicator.Instance.ConfigRepository.Sites)
             {
                 statuses.Add(new SiteStatusModel(site.Status));
             }
@@ -57,7 +58,7 @@ namespace AzureSiteReplicator.Controllers
                     
                     file.SaveAs(path);
 
-                    Replicator.Instance.Repository.AddSite(path);
+                    Replicator.Instance.ConfigRepository.AddSite(path);
 
                     // Trigger a deployment since we just added a new target site
                     Replicator.Instance.TriggerDeployment();
@@ -113,14 +114,14 @@ namespace AzureSiteReplicator.Controllers
         {
             if (skipRules == null)
             {
-                Replicator.Instance.Repository.Config.ClearSkips();
+                Replicator.Instance.ConfigRepository.Config.ClearSkips();
             }
             else
             {
-                Replicator.Instance.Repository.Config.SetSkips(skipRules.ToList());
+                Replicator.Instance.ConfigRepository.Config.SetSkips(skipRules.ToList());
             }
 
-            Replicator.Instance.Repository.Config.Save();
+            Replicator.Instance.ConfigRepository.Config.Save();
             Replicator.Instance.TriggerDeployment();
 
             return new HttpResponseMessage(HttpStatusCode.OK);
@@ -130,7 +131,7 @@ namespace AzureSiteReplicator.Controllers
         public HttpResponseMessage Site(string name)
         {
             FindSiteOrThrow(name);
-            Replicator.Instance.Repository.RemoveSite(name);
+            Replicator.Instance.ConfigRepository.RemoveSite(name);
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
@@ -165,7 +166,7 @@ namespace AzureSiteReplicator.Controllers
 
         private Site FindSiteOrThrow(string name)
         {
-            Site site = Replicator.Instance.Repository.Sites.FirstOrDefault(s =>
+            Site site = Replicator.Instance.ConfigRepository.Sites.FirstOrDefault(s =>
             {
                 return string.Equals(name, s.Name, StringComparison.OrdinalIgnoreCase);
             });

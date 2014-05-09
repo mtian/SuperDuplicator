@@ -16,7 +16,7 @@ namespace AzureSiteReplicator.Data
             set;
         }
 
-        public IEnumerable<Site> Sites { get; private set; }
+        public IReadOnlyCollection<Site> Sites { get; private set; }
         
         public PublishXmlRepository()
         {

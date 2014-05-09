@@ -94,7 +94,7 @@ namespace AzureSiteReplicator
             string siteReplicatorPath)
         {
             // Publish to all the target sites in parallel
-            var allChanges = await Task.WhenAll(Instance.Repository.Sites.Select(async site =>
+            var allChanges = await Task.WhenAll(Instance.ConfigRepository.Sites.Select(async site =>
             {
                 return await PublishContentToSingleSite(site);
             }));
@@ -105,7 +105,7 @@ namespace AzureSiteReplicator
                 DeploymentChangeSummary changeSummary = allChanges[i];
                 if (changeSummary == null) continue;
 
-                Trace.TraceInformation("Processed sites: {0}", Instance.Repository.Sites.Count());
+                Trace.TraceInformation("Processed sites: {0}", Instance.ConfigRepository.Sites.Count());
                 Trace.TraceInformation("BytesCopied: {0}", changeSummary.BytesCopied);
                 Trace.TraceInformation("Added: {0}", changeSummary.ObjectsAdded);
                 Trace.TraceInformation("Updated: {0}", changeSummary.ObjectsUpdated);
@@ -130,7 +130,7 @@ namespace AzureSiteReplicator
                     WebDeployHelper webDeployHelper = new WebDeployHelper();
                     return await Task<DeploymentChangeSummary>.Run(() =>
                         webDeployHelper.DeployContentToOneSite(
-                            Repository,
+                            ConfigRepository,
                             Environment.Instance.ContentPath,
                             site.Settings.FilePath));
                 }
@@ -153,12 +153,17 @@ namespace AzureSiteReplicator
 
         }
 
-        public IConfigRepository Repository
+        public IConfigRepository ConfigRepository
         {
             get
             {
                 return _configRepository;
             }
+        }
+
+        public IPublishXmlRepository PublishXmlRepository
+        {
+            get { return _publishXmlRepository; }
         }
     }
 }
