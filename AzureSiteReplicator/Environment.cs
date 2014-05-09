@@ -53,7 +53,7 @@ namespace AzureSiteReplicator
                 // Publish the wwwroot folder
                 ContentPath = Path.Combine(homePath, "site", "wwwroot");
 
-                SiteReplicatorPath = Path.Combine(homePath, "data", "SiteReplicator");
+                SiteReplicatorPath = Path.Combine(homePath, "data", "SiteDuplicator");
             }
             else
             {
@@ -63,7 +63,7 @@ namespace AzureSiteReplicator
 
                 ContentPath = Path.Combine(appData, "source");
 
-                SiteReplicatorPath = Path.Combine(appData, "SiteReplicator");
+                SiteReplicatorPath = Path.Combine(appData, "SiteDuplicator");
             }
 
             Trace.TraceInformation("ContentPath={0}", ContentPath);

@@ -100,7 +100,7 @@ namespace AzureSiteReplicator.Utils
         private static HttpClient NewHttpClient()
         {
             var handler = new WebRequestHandler();
-            handler.ClientCertificates.Add(PublishProfile.Current.GetCertificate());
+            handler.ClientCertificates.Add(PublishProfile.Current.Certificate);
 
             var client = new HttpClient(handler);
             client.MaxResponseContentBufferSize = 2097152; // 2MB

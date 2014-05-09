@@ -45,12 +45,27 @@ namespace AzureSiteReplicator.Management
             return (this.Url ?? this.Subscriptions[0].ServiceManagementUrl).TrimEnd('/');
         }
 
-        internal X509Certificate2 GetCertificate()
+        X509Certificate2 _certificate;
+        
+        internal X509Certificate2 Certificate
         {
-            return new X509Certificate2(
-                Convert.FromBase64String(this.ManagementCertificate ?? this.Subscriptions[0].ManagementCertificate), 
-                this.ManagementCertificatePassword ?? this.Subscriptions[0].ManagementCertificatePassword
-            );
+            get
+            {
+                if (_certificate == null)
+                {
+                    _certificate = new X509Certificate2(
+                        Convert.FromBase64String(this.ManagementCertificate ?? this.Subscriptions[0].ManagementCertificate), 
+                        this.ManagementCertificatePassword ?? this.Subscriptions[0].ManagementCertificatePassword
+                    );
+                }
+
+                return _certificate;
+            }
+
+            set
+            {
+                _certificate = value;
+            }
         }
         
         public class Subscription

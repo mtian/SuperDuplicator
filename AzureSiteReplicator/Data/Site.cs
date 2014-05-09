@@ -27,6 +27,21 @@ namespace AzureSiteReplicator.Data
             }
         }
 
+        public string WebSpace
+        {
+            get;
+            set;
+        }
+
+        public bool Checked
+        {
+            get
+            {
+                var config = Path.Combine(Environment.Instance.SiteReplicatorPath, Path.GetFileName(_profilePath));
+                return File.Exists(config);
+            }
+        }
+
         public string Name
         {
             get { return Settings.SiteName; }

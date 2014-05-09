@@ -16,6 +16,7 @@ namespace AzureSiteReplicator.Controllers
     public class HomeController : Controller
     {
         private ReplicationInfoModel _model;
+
         public ActionResult Index()
         {
             List<SiteStatusModel> statuses = new List<SiteStatusModel>();
@@ -48,27 +49,42 @@ namespace AzureSiteReplicator.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(HttpPostedFileBase file)
+        public ActionResult Index(HttpPostedFileBase unused)
         {
-            if (file.ContentLength > 0)
-            {
-                try
-                {
-                    PublishSettings settings = new PublishSettings(file.InputStream);
-                    string fileName = settings.SiteName + ".publishSettings";
-                    var path = Path.Combine(Environment.Instance.SiteReplicatorPath, fileName);
+            //if (file.ContentLength > 0)
+            //{
+            //    try
+            //    {
+            //        PublishSettings settings = new PublishSettings(file.InputStream);
+            //        string fileName = settings.SiteName + ".publishSettings";
+            //        var path = Path.Combine(Environment.Instance.SiteReplicatorPath, fileName);
                     
-                    file.SaveAs(path);
+            //        file.SaveAs(path);
 
-                    Replicator.Instance.ConfigRepository.AddSite(path);
+            //        Replicator.Instance.ConfigRepository.AddSite(path);
 
-                    // Trigger a deployment since we just added a new target site
-                    Replicator.Instance.TriggerDeployment();
-                }
-                catch (IOException)
+            //        // Trigger a deployment since we just added a new target site
+            //        Replicator.Instance.TriggerDeployment();
+            //    }
+            //    catch (IOException)
+            //    {
+            //        // todo: error handling
+            //    }
+            //}
+
+            foreach (var file in Directory.EnumerateFiles(Environment.Instance.SiteReplicatorPath))
+            {
+                if (file.EndsWith(".publishSettings"))
                 {
-                    // todo: error handling
+                    System.IO.File.Delete(file);
                 }
+            }
+
+            foreach (string siteName in HttpContext.Request.Form.Keys)
+            {
+                var src = Replicator.Instance.PublishXmlRepository.Sites.First(s => s.Name == siteName).FilePath + ".publishSettings";
+                var dst = Path.Combine(Environment.Instance.SiteReplicatorPath, Path.GetFileName(src));
+                System.IO.File.Copy(src, dst);
             }
 
             return RedirectToAction("Index");

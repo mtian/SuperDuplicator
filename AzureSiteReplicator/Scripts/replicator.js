@@ -141,7 +141,8 @@
         });
     };
 
-    setTimeout(getSiteStatus, refreshTimeout);
+    // setTimeout(getSiteStatus, refreshTimeout);
+
     setupSiteStatusButtons();
 
     $('#addSkipButton').click(function () {
