@@ -11,7 +11,7 @@ namespace AzureSiteReplicator.Contracts
     public interface IConfigRepository
     {
         ConfigFile Config { get; }
-        IEnumerable<Site> Sites { get; }
+        List<Site> Sites { get; }
         void AddSite(string site);
         void RemoveSite(string name);
     }

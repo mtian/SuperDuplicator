@@ -11,7 +11,7 @@ namespace AzureSiteReplicator.Data
     public class ConfigRepository : IConfigRepository
     {
         private ConfigFile _config;
-        private volatile HashSet<Site> _sites;
+        private volatile List<Site> _sites;
 
         public ConfigRepository()
         {
@@ -22,7 +22,7 @@ namespace AzureSiteReplicator.Data
                 FileHelper.FileSystem.Directory.GetFiles(
                     Environment.Instance.SiteReplicatorPath, "*.publishSettings");
 
-            _sites = new HashSet<Site>();
+            _sites = new List<Site>();
             foreach (var profilePaths in profileFilePaths)
             {
                 _sites.Add(new Site(profilePaths));
@@ -38,18 +38,18 @@ namespace AzureSiteReplicator.Data
             }
         }
 
-        public IEnumerable<Site> Sites
+        public List<Site> Sites
         {
             get
             {
-                HashSet<Site> sites = _sites;
+                List<Site> sites = _sites;
                 return sites;
             }
         }
 
         public void AddSite(string profilePath)
         {
-            HashSet<Site> sites = new HashSet<Site>(_sites);
+            List<Site> sites = new List<Site>(_sites);
             Site newSite = new Site(profilePath);
             if (!sites.Contains(newSite))
             {
@@ -61,7 +61,7 @@ namespace AzureSiteReplicator.Data
 
         public void RemoveSite(string siteName)
         {
-            HashSet<Site> sites = _sites;
+            List<Site> sites = _sites;
 
             Site siteToRemove = sites.FirstOrDefault((m) =>
             {
@@ -71,7 +71,7 @@ namespace AzureSiteReplicator.Data
             if (siteToRemove != null)
             {
                 siteToRemove.Delete();
-                sites = new HashSet<Site>(sites);
+                sites = new List<Site>(sites);
                 sites.Remove(siteToRemove);
             }
 

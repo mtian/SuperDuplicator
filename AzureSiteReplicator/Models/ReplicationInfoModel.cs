@@ -12,5 +12,6 @@ namespace AzureSiteReplicator.Models
         //public List<PublishSettingsModel> PublishSettings { get; set; }
         public IReadOnlyCollection<SiteStatusModel> SiteStatuses { get; set; }
         public IReadOnlyCollection<Site> AllSites { get; set; }
+        public List<bool> Checked { get; set; } 
     }
 }

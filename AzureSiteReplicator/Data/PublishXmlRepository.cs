@@ -16,7 +16,7 @@ namespace AzureSiteReplicator.Data
             set;
         }
 
-        public IReadOnlyCollection<Site> Sites { get; private set; }
+        public List<Site> Sites { get; private set; }
         
         public PublishXmlRepository()
         {
@@ -37,17 +37,20 @@ namespace AzureSiteReplicator.Data
                 }
             };
 
-            var sites = new List<Site>();
+            var filePaths =
+                FileHelper.FileSystem.Directory.GetFiles(
+                    Environment.Instance.SiteReplicatorPath + "\\PublishXml", "*.publishSettings");
+            var sites = filePaths.Select(profilePaths => new Site(profilePaths)).ToList();
 
-            foreach (WebSite site in WebSite.GetAllAsync().Result)
-            {
-                var xml = site.GetPublishXml().Result;
-                RootDirectory = Path.Combine(Environment.Instance.SiteReplicatorPath, "PublishXml");
-                Directory.CreateDirectory(RootDirectory);
-                var path = Path.Combine(RootDirectory, site.Name + ".publishSettings");
-                File.WriteAllText(path, xml);
-                sites.Add(new Site(path));
-            }
+            //foreach (WebSite site in WebSite.GetAllAsync().Result)
+            //{
+            //    var xml = site.GetPublishXml().Result;
+            //    RootDirectory = Path.Combine(Environment.Instance.SiteReplicatorPath, "PublishXml");
+            //    Directory.CreateDirectory(RootDirectory);
+            //    var path = Path.Combine(RootDirectory, site.Name + ".publishSettings");
+            //    File.WriteAllText(path, xml);
+            //    sites.Add(new Site(path));
+            //}
 
             Sites = sites;
         }

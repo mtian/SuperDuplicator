@@ -15,6 +15,7 @@ namespace AzureSiteReplicator.Controllers
 {
     public class HomeController : Controller
     {
+        private ReplicationInfoModel _model;
         public ActionResult Index()
         {
             List<SiteStatusModel> statuses = new List<SiteStatusModel>();
@@ -23,21 +24,22 @@ namespace AzureSiteReplicator.Controllers
                 statuses.Add(new SiteStatusModel(site.Status));
             }
 
-            ReplicationInfoModel model = new ReplicationInfoModel()
+            _model = new ReplicationInfoModel()
             {
                 AllSites = Replicator.Instance.PublishXmlRepository.Sites,
+                Checked = new List<bool>(Replicator.Instance.PublishXmlRepository.Sites.Count),
                 SiteStatuses = statuses,
                 SkipFiles = Replicator.Instance.ConfigRepository.Config.SkipRules
             };
 
-            return View(model);
+            return View(_model);
         }
 
         [HttpGet]
         public JsonResult SiteStatuses()
         {
             List<SiteStatusModel> statuses = new List<SiteStatusModel>();
-            foreach (var site in Replicator.Instance.ConfigRepository.Sites)
+            foreach (var site in Replicator.Instance.PublishXmlRepository.Sites)
             {
                 statuses.Add(new SiteStatusModel(site.Status));
             }
@@ -66,6 +68,24 @@ namespace AzureSiteReplicator.Controllers
                 catch (IOException)
                 {
                     // todo: error handling
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Apply(string[] siteNames)
+        {
+            foreach (var name in siteNames)
+            {
+                Console.WriteLine(name);
+            }
+            for (int i = 0; i < _model.Checked.Count; i++)
+            {
+                if (_model.Checked[i])
+                {
+                    
                 }
             }
 

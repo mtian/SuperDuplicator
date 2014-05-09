@@ -8,6 +8,6 @@ namespace AzureSiteReplicator.Contracts
 {
     public interface IPublishXmlRepository
     {
-        IReadOnlyCollection<Site> Sites { get; }
+        List<Site> Sites { get; }
     }
 }

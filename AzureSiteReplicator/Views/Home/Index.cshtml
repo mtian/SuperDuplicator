@@ -26,30 +26,29 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h1>Site List</h1>
-                        <form>
+                        @using (Html.BeginForm("Apply"))
+                        {
                             <ul id="siteList" class="list-group" style="margin-bottom:0px;">
                                 @{
-                                    var sites = Model.AllSites;
-                                    foreach (var site in sites)
-                                    {
-                                        string status = "Not Duplicated"; //site.State == "NotStarted" ? "Deploying" : site.State
-                                        <li class="list-group-item" data-sitename="@site.Name" data-sitestate="@status">
-                                            <div class="row">
-                                                <div class="siteStatusText col-xs-9"><span class="siteStatusText">@site.Name</span></div>
-                                                <div class="col-xs-1">
-                                                    <a href="#" class="syncSiteBadge" title="Sync"><span class="badgePlain glyphicon glyphicon-repeat"></span></a>
-                                                </div>
-                                                <div class="col-xs-1">
-                                                    <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs"><span class="badgePlain glyphicon glyphicon-list"></span></a>
-                                                </div>
-                                                <div class="col-xs-1"><input type="checkbox" name="@site.Name" value="@site.Name"></div>
-                                            </div>
-                                        </li>
-                                    }
+                            foreach (var site in Model.AllSites)
+                            {
+                                string status = "Not Duplicated"; //site.State == "NotStarted" ? "Deploying" : site.State
+                                <li class="list-group-item" data-sitename="@site.Name" data-sitestate="@status">
+                                    <div class="row">
+                                        <div class="siteStatusText col-xs-9"><span class="siteStatusText">@site.Name</span></div>
+                                        <div class="col-xs-1">
+                                            <a href="@Url.Action("LogFile", new {SiteName=site.Name})" title="Download logs">
+                                                <span class="badgePlain glyphicon glyphicon-list"></span>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-1"><input type="checkbox" name="siteNames" value="@site.Name"></div>
+                                    </div>
+                                </li>
+                            }
                                 }
                             </ul>
-                            <button type="submit">Submit</button>
-                        </form>
+                            <button type="submit" value="Apply">Submit</button>
+                        }
                     </div>
                 </div>
             </div>
@@ -102,7 +101,6 @@
 </div>
 
 @section scripts{
-    <script type="text/javascript" src='@Url.Content("~/Scripts/replicator.js")'></script>
     <script type="text/javascript">
 
         // Global Variable used to help javascript resolve the sub application path once the site is hosted on WAWS
